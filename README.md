@@ -1,6 +1,6 @@
 # dotEngine-doc
 
-dotEngine  文档  
+dotEngine    
 
-https://github.com/dotEngine/dotEngine-doc/wiki
+https://github.com/dotEngine/dotEngine-doc
 
