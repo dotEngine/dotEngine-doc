@@ -15,7 +15,7 @@
 ## 快速入门
 
 - 为了保证用户的appSecret和token不在客户端被窃取，dotEngine用到的token全部在服务端获取。每次进入房间之前从服务端获取一次token。
-- 在dotEngine官方网站上盛情注册账号。
+- 在dotEngine官方网站上申请注册账号。
 - 在创建一个项目后，dotEngine会为该项目分配一个appKey和appSecret.
 - dotEngine提供了服务端的SDK，SDK可以用来生成会话，生成token。
 - 客户端SDK拿到token后，就可以初始化实例，创建音视频会话。
@@ -23,19 +23,19 @@
 
 ## 客户端SDK文档
 
+- [iOS SDK](dot-engine-ios-sdk.md)
+- [Android SDK](dot-engine-android-sdk.md)
+- [Javascript SDK](dot-engine-javascript-sdk.md)
 
-- [iOS SDK文档]
-- [android SDK文档]
-  ​
 
 
 ## 服务端SDK文档
 
-- python SDK文档
-- golang SDK文档
-- nodejs SDK文档
-- java SDK文档
-- php SDK文档
+- python SDK
+- golang SDK
+- nodejs SDK
+- java SDK
+- php SDK
 
 
 ## 查看更多信息
