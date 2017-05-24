@@ -10,6 +10,7 @@
 
 - Server SDK 
     - [Sever SDK](dot-engine-backend-sdk.md)
+    = [Rest API](dot-engine-rest-api.md)
 
 - FAQ
     - todo 
