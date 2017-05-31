@@ -268,7 +268,7 @@ typedef NS_ENUM(NSInteger, DotStatus) {
 
 `-(instancetype)initWithAudio:(BOOL)audio video:(BOOL)video;`
 
-> 创建本地DotStream, audio和video最少需要有一个,否则localstrea会建立不成功
+> 创建本地DotStream, audio和video最少需要有一个,否则localStrem会建立不成功
 
 #### 设置DotStream VideoProfile 
 
