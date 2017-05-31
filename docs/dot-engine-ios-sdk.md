@@ -36,81 +36,17 @@
 
 ## SDK API  
 
-sdk api 主要包含两部分, `DotEngine` 是dotEngine的主体操作类, `DotEngineDelegate`是回调类.
 
 
+### VideoProfile 
 
-### DotEngine 
-
-
-
-#### 创建DotEngine实例
-
-`+(instancetype _Nonnull)sharedInstanceWithDelegate:(id<DotEngineDelegate>)delegate;`
-
-
-> 该方法创建一个DotEngine的实例, delegate 为DotEngineDelegate
-
-
-
-#### 获得创建的DotEngine实例
-
-`+(instancetype _Nonnull)sharedInstance;`
-
-> 该方法返回之前创建的DotEngine实例
-
-
-
-#### 开启本地音视频
-
-`-(void)startLocalMedia;`
-
-> 该方法初始化本地的音视频, 可以用来在加入房间之前进行视频的预览, 此方法会产生 `didAddLocalView` 回调.
-> 如果不调用此方法, 则该用户为订阅模式,只接收远程的视频.
-
-
-
-### 关闭本地音视频
-
-`-(void)stopLocalMedia;`
-
-> 该方法结束本地的音视频, 此方法会产生 `didRemoveLocalView`回调
-> 如果在加入房间之后调用该方法, 则会转为订阅模式.
-
-
-
-### 加入房间
-
-`-(void)joinRoomWithToken:(NSString*)token;`
-
-> 加入一个房间, 房间和用户信息已经包含在token中, dotEngine的服务端会自动匹配.  
-> 为防止token泄露,最好不要重复使用token. 此方法调用成功会产生`didJoined`回调  
-
-
-
-### 离开房间
-
-`-(void)leaveRoom;`
-
-> 离开一个房间,  此方法并不会停止本地音视频, 如果要关闭本地视频预览, 在调用leaveRoom后调stopLocalMedia.
-
-> 此方法会产生`didLeave`回调.
-
-
-
-### 设置本地视频发送质量 
-
-`-(void)setupVideoProfile:(DotEngineVideoProfile)profile;`
-
-> dotEngine设置了多种视频传输质量来适配各种使用场景. 此方法可以设置本地视频的传输质量. 
-
-> 此方法需要在开启本地音视频之前调用. DotEngineVideoProfile 默认为DotEngine_VideoProfile_240P.
-
-- **DotEngineVideoProfile的种类为:**
+> VideoProfile 代表本地stream的视频质量
 
 ```
-typedef NS_ENUM(NSInteger, DotEngineVideoProfile)
+
+typedef NS_ENUM(NSInteger)
 {
+    
     DotEngine_VideoProfile_120P = 0,        // 160x120   15   80
     DotEngine_VideoProfile_120P_2 = 1,		// 120x160   15   80
     DotEngine_VideoProfile_120P_3 = 2,		// 120x120   15   60
@@ -145,56 +81,71 @@ typedef NS_ENUM(NSInteger, DotEngineVideoProfile)
     DotEngine_VideoProfile_720P_3 = 52,		// 1280x720  30   1700
     DotEngine_VideoProfile_720P_4 = 53,		// 720x1280  30   1700
     
-};
-```
-
-
-
-### 设置音视频采集模式
-
-`-(void)setCaptureMode:(DotEngineCaptureMode)captureMode;`
-
-> 此方法为高级api,  设置音视频的采集模式. 使用场景为自定义音视频输入.
-
-- **DotEngineCaptureMode 有三种模式:**
+} DotEngineVideoProfile;
 
 ```
-typedef NS_ENUM(NSInteger,DotEngineCaptureMode){
-    DotEngine_Capture_Default,
-    DotEngine_Capture_Custom_Video,
-    DotEngine_Capture_Custom_Video_Audio
-
-};
-```
-
-- **DotEngine_Capture_Default:**  为默认模式, 使用dotEngine内置的音视频采集api.
-
-- **DotEngine_Capture_Custom_Video:**  为自定义视频模式, 使用场景为用户自行采集视频, 需要对采集的视频进行更多的处理, 比如添加滤镜, 增加美颜,视觉分析,然后再把处理过的视频数据送给dotEngine.
-
-- **DotEngine_Capture_Custom_Video_Audio:** 为自定义音频和视频,  此模式暂时未开放.
 
 
 
-### 切换前后摄像头
-
-`-(void)switchCamera;`
-
-> 切换前后摄像头, 默认是优先选择前置摄像头.
+### DotEngine 
 
 
 
-### 本地音频静音模式切换
+#### 创建DotEngine实例
 
-`-(void)muteLocalAudio:(BOOL)muted;`
-
-> `muted` 如果为true, 会停止发送本地音频, `muted` 如果为false, 会恢复发送本地音频
+`+(instancetype _Nonnull)sharedInstanceWithDelegate:(id<DotEngineDelegate>)delegate;`
 
 
-### 本地视频切换
+> 该方法创建一个DotEngine的实例, delegate 为DotEngineDelegate
 
-`-(void)muteLocalVideo:(BOOL)muted;`
 
-> `muted` 如果为true, 会停止发送本地视频, `muted` 如果为false, 会恢复发送本地视频
+#### 获得创建的DotEngine实例
+
+`+(instancetype _Nonnull)sharedInstance;`
+
+> 该方法返回之前创建的DotEngine实例
+
+
+
+### 添加本地stream  
+
+`-(void)addStream:(DotStream* _Nonnull)stream;`
+
+> 添加本地stream, 此方法需要在加入房间成功之后回调.
+
+> DotEngine 支持添加多个stream, 比如进行屏幕共享的时候,也共享摄像头
+
+> 如果成功会产生 didAddLocalStream 回调 
+
+
+
+### 移出本地stream 
+
+`-(void)removeStream:(DotStream* _Nonnull)stream;`
+
+> 移出本地stream 
+
+> 如果成功会产生 didRemoveLocalStream 回调 
+
+
+
+### 加入房间
+
+`-(void)joinRoomWithToken:(NSString*)token;`
+
+> 加入一个房间, 房间和用户信息已经包含在token中, dotEngine的服务端会自动匹配.  
+> 为防止token泄露,最好不要重复使用token. 此方法调用成功会产生`didJoined`回调  
+
+
+
+### 离开房间
+
+`-(void)leaveRoom;`
+
+> 离开一个房间,  此方法并不会停止本地音视频, 如果要关闭本地视频预览, 在调用leaveRoom后调stopLocalMedia.
+
+> 此方法会产生`didLeave`回调.
+
 
 
 
@@ -203,13 +154,6 @@ typedef NS_ENUM(NSInteger,DotEngineCaptureMode){
 `-(void)enableSpeakerphone:(BOOL)enable;`
 
 > speekerphone 模式切换
-
-
-### 开启音量回调
-
-`-(void)enableAudioVolumeIndicate:(BOOL)enable;`
-
-> 本地音量回调开关
 
 
 ### 获取测试token
@@ -225,25 +169,6 @@ typedef NS_ENUM(NSInteger,DotEngineCaptureMode){
 ```
 
 > 获得测试token, 方面用户在测试的时候快速集成. 不建议在生产环境中使用, 生产环境中请使用后端sdk来获取token.
-
-
-
-
-
-
-### 发送本地视频
-
-`-(void) sendSampleBuffer:(CMSampleBufferRef ) sampleBuffer;`
-
-> 当DotEngineCaptureMode 为`DotEngine_Capture_Custom_Video`, `DotEngine_Capture_Custom_Video_Audio`时,需要输入外部的视频源. 
-
-
-### 发送本地视频
-
-`-(void) sendPixelBuffer:(CVPixelBufferRef _Nonnull)pixelBuffer rotation:(VideoRotation)rotation;`
-
-> 同sendSampleBuffer, 只不过支持CVPixelBuffer输入
-
 
 
 <br/>
@@ -274,14 +199,13 @@ DotEngineDelegate 为一个delegate.  处理DotEngineKit的回调.
 
 `-(void)dotEngine:(DotEngine* _Nonnull) engine  stateChange:(DotEngineStatus)state;`
 
-- **DotEngineStatus:**
+- **DotStatus:**
 
 ```
-typedef NS_ENUM(NSInteger, DotEngineStatus) {
-    DotEngineStatusReady,
-    DotEngineStatusConnected,
-    DotEngineStatusDisConnected,
-    DotEngineStatusError,
+typedef NS_ENUM(NSInteger, DotStatus) {
+    DotStatusConnecting,
+    DotStatusConnected,
+    DotStatusDisConnected,
 };
 
 ```
@@ -289,89 +213,42 @@ typedef NS_ENUM(NSInteger, DotEngineStatus) {
 > 连接状态发生变化   
 
 
-### 本地视频视图加入回调
+### 本地stream加入成功回调
 
-`-(void)dotEngine:(DotEngine* _Nonnull) engine  didAddLocalView:(UIView* _Nonnull)view;`
+`-(void)dotEngine:(DotEngine* _Nonnull) engine didAddLocalStream:(DotStream* _Nonnull)stream;`
 
-> 用户在调用startLocalMedia后, 会回调此方法. 
+> 在addStream之后, 会回调此方法. 
 
-> 如果view没有被添加到父视图中, 该视图中的视频不会被渲染.
-
-
-
-### 本地视频视图移出回调
-
-`-(void)dotEngine:(DotEngine* _Nonnull) engine didRemoveLocalView:(UIView*)view;`
-
-> 用户在调用stopLocalMedia后, 会回调此方法.  dotEngine 不会做view的移出操作, 需要用户自己完成.
+> 如果stream中包含视频, dotEngine 会自动创建DotView, 可以通过stream.view 获得已经创建好的view
 
 
 
 
-### 远程视频视图加入回调
+### 本地stream移出回调
 
-`-(void)dotEngine:(DotEngine* _Nonnull) engine  didAddRemoteView:(UIView* _Nonnull)view withUser:(NSString*_Nonnull)userId;`
+`-(void)dotEngine:(DotEngine* _Nonnull) engine didRemoveLocalStream:(DotStream* _Nonnull)stream;`
 
-> 当远程用户的视频准备好的时候会调用此方法.
+> 用户在调用removeStream后, 会回调此方法.  dotEngine 不会做view的移出操作, 需要用户自己完成.
 
-> 如果view没有被添加父视图中,该视图中的视频不会被渲染. 
+
+
+
+### 远程stream加入回调
+
+`-(void)dotEngine:(DotEngine* _Nonnull) engine didAddRemoteStream:(DotStream* _Nonnull)stream;`
+
+> 当远程用户的stream创建好的时候会调用此方法.
+
 
 
 
 ### 远程视频视图移出回调
 
-`-(void)dotEngine:(DotEngineKit*) engine didRemoveRemoteView:(UIView*)view withUser:(NSString*)userId;`
+`-(void)dotEngine:(DotEngine* _Nonnull) engine didRemoveRemoteStream:(DotStream* _Nonnull) stream;`
 
-> 当远程用户的视频移出的时候会调用此方法.dotEngine 不会做view的移出操作, 需要用户自己完成.
-
-
+> 当远程用户的stream的时候会调用此方法.dotEngine 不会做view的移出操作, 需要用户自己完成.
 
 
-### 本地用户静音/关闭静音回调
-
-`-(void)dotEngine:(DotEngine * _Nonnull)engine didMutedLocalAudio:(BOOL)muted;`
-
-> 当用户开启静音或者关闭静音时会产生此回调.  
-
-
-
-### 本地用户关闭视频/打开视频回调
-
-`-(void)dotEngine:(DotEngine * _Nonnull)engine didMutedLocalVideo:(BOOL)muted;`
-
-> 当用户发送视频或者停止发送本地视频时会产生此回调.
-
-
-### 远程用户静音/关闭静音回调
-
-`-(void)dotEngine:(DotEngine * _Nonnull)engine didMutedRemoteAudio:(BOOL)muted userId:(NSString*)peerId;`
-
-> 远程用户开启静音/或者关闭静音时会产生此回调
-
-
-
-
-### 远程用户关闭/打开视频回调
-
-`-(void)dotEngine:(DotEngine * _Nonnull)engine didMutedRemoteVideo:(BOOL)muted userId:(NSString*)peerId;`
-
-> 远程用户开启静音/或者关闭静音时会产生此回调
-
-
-
-
-### 用户音量回调 
-
-`-(void)dotEngine:(DotEngine* _Nonnull)engine didGotAudioVolume:(float)volume  userId:(NSString* _Nonnull)userId;`
-
-!> 需要在加入房间之后才有回调,  200ms回调一次 
-
-
-### 用户bitrate回调
-
-`-(void)dotEngine:(DotEngine* _Nonnull)engine didGotBitrateStat:(DotBitrateStat* _Nonnull)stat userId:(NSString* _Nonnull)userId;`
-
-!> 需要在加入房间之后才有回调,  1000ms回调一次 
 
 
 ### 错误回调
@@ -380,6 +257,188 @@ typedef NS_ENUM(NSInteger, DotEngineStatus) {
 
 > 当dotEngine发生错误会产生此回调
 
+
+
+
+### DotStream 
+
+
+
+#### 初始化本地stream
+
+`-(instancetype)initWithAudio:(BOOL)audio video:(BOOL)video;`
+
+> 创建本地DotStream, audio和video最少需要有一个,否则localstrea会建立不成功
+
+#### 设置DotStream VideoProfile 
+
+`-(void)setupVideoProfile:(DotEngineVideoProfile)profile;`
+
+> dotEngine设置了多种视频传输质量来适配各种使用场景. 此方法可以设置本地视频的传输质量. 
+
+>设置本地视频发送质量, 此方法需要在addStream 前调用. DotEngineVideoProfile 默认为DotEngine_VideoProfile_240P.
+
+
+
+
+#### 切换前后摄像头 
+
+`-(void)switchCamera;`
+
+
+#### 静音/结束静音   接受/停止接受远程音频
+
+`-(void)muteAudio:(BOOL)muted;`
+
+> 此方法分为本地和远程. 如果是本地的stream, 则为静音/结束静音. 如果是远程的则为接受/停止接受远程音频
+
+
+#### 显示/不显示本地视频  接受/停止接受远程视频
+
+`-(void)muteVideo:(BOOL)muted;`
+
+> 此方法分为本地和远程. 如果是本地的stream, 则为显示/不显示本地视频. 如果是远程的则为接受/停止接受远程视频.
+
+
+### DotStream 属性列表 
+
+
+
+- `@property (nonatomic,readonly) BOOL local;`  是否是本地stream
+
+- `@property (nonatomic,readonly) BOOL audio;`  是否包含音频
+
+- `@property (nonatomic,readonly) BOOL video;`  是否包含视频 
+
+- `@property (nonatomic,readonly) NSString* streamId;` streamId, 全局唯一
+
+- `@property (nonatomic,readonly) NSString* peerId;`  peerId
+
+- `@property (nonatomic,readonly) DotView*  view;`   stream 对应的view
+
+- `@property (nonatomic,weak) id<DotStreamDelegate> delegate;`  
+
+> DotStream 对应的delegate,  可以通过  [stream setDelegate:xxxx] 来进行设置
+
+- `@property (nonatomic,retain) id<DotVideoCapturer> _Nullable videoCapturer;`
+
+> 设置videoCapturer, 自定义视频输入的时候用到, 如果设置此属性视频流将取至videoCapturer
+
+
+
+### DotStreamDelegate
+
+> DotStreamDelegate 为DotStream的回调protocol
+
+
+```
+protocol DotStreamDelegate <NSObject>
+
+-(void)stream:(DotStream* _Nullable)stream  didMutedVideo:(BOOL)muted;
+
+-(void)stream:(DotStream* _Nullable)stream  didMutedAudio:(BOOL)muted;
+
+-(void)stream:(DotStream* _Nullable)stream  didGotAudioLevel:(int)audioLevel;
+
+@end
+
+```
+
+#### 远程视频 开启/关闭回调
+
+`-(void)stream:(DotStream* _Nullable)stream  didMutedVideo:(BOOL)muted;`
+
+> 远程视频开启/关闭产生的回调 
+
+
+#### 远程音频 开启/关闭回调 
+
+`-(void)stream:(DotStream* _Nullable)stream  didMutedAudio:(BOOL)muted;`
+
+> 远程音频 开启/关闭回调 
+
+
+#### 音量回调
+
+`-(void)stream:(DotStream* _Nullable)stream  didGotAudioLevel:(int)audioLevel;`
+
+>  audioLevel 的大小为 [-127,0], -127为静音, 0为最大. dotEngine 会自动过滤audioLevel < -50的, 
+
+>  此回调 500ms 回调一次 
+
+
+
+### DotView 
+
+
+> DotView 为DotEngine 内部创建, 用户并不需要创建DotView实例
+
+
+#### DotView 属性列表
+
+- `@property (nonatomic, readonly) CGSize videoSize;` videoSize 为接收到视频的大小
+
+- `@property (nonatomic, readonly) BOOL hasVideoData;` 是否已经接收到视频的第一帧
+
+- `@property (nonatomic, weak)     id<DotViewDelegate>  dotViewDelegate;` 
+
+> DotView 对应的delegate, 可以通过 [view setDotViewDelegate:XXXXX] 来进行设置
+
+- `@property (nonatomic, assign)   DotVideoViewScaleMode scaleMode;`  设置scaleMode
+
+- `@property (nonatomic, assign)   BOOL mirror;`   是否镜像该view
+
+
+
+
+### DotVideoViewScaleMode
+
+```
+typedef NS_ENUM(NSUInteger, DotVideoViewScaleMode)
+{
+    
+    DotVideoViewScaleModeFit = 0,
+    DotVideoViewScaleModeFill = 1,
+};
+```
+
+> `DotVideoViewScaleModeFit`  表示根据view的大小完整显示视频内容, 进行等比例缩放或扩大
+
+> `DotVideoViewScaleModeFill` 表示根据view的大小视频完全填充view, 视频会根据view的大小做一定裁剪
+
+
+### DotViewDelegate
+
+
+```
+
+@protocol DotViewDelegate <NSObject>
+
+- (void)videoViewDidReceiveData:(DotView *)renderer withSize:(CGSize)dimensions;
+- (void)videoView:(DotView *)renderer streamDimensionsDidChange:(CGSize)dimensions;
+
+@end
+
+``` 
+
+- ` (void)videoViewDidReceiveData:(DotView *)renderer withSize:(CGSize)dimensions;`
+
+第一帧视频开始渲染的时候开始的回调
+
+
+- `- (void)videoView:(DotView *)renderer streamDimensionsDidChange:(CGSize)dimensions;`
+
+视频大小发生改变时产生的回调 
+
+
+
+### DotVideoCapturer
+
+
+> 用户可以自定义视频的输入, 比如添加滤镜, 屏幕共享, 发送一个view. DotVideoCapturer 是一个protocol
+
+
+具体可见 [Custom Capturer](dot-engine-custom-capturer.md)
 
 
 
