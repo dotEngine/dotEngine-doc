@@ -1,6 +1,6 @@
 # dotEngine javascript sdk
 
-*2017-05-15 更新*
+*2017-05-31 更新*
 
 
 ## SDK使用
@@ -129,8 +129,9 @@ dotEngine.on('addLocalStream', (stream) => {
 
 ```
 
-> 如果添加成功, 会有`addLocalStream` 事件回调, 参数为DotStream实例
+> 此方法需要在加入房间之后调用 
 
+> 如果添加成功, 会有`addLocalStream` 事件回调, 参数为DotStream实例
 
 
 #### 移出本地stream
@@ -262,8 +263,13 @@ dotEngine.generateTestToken(appkey,appSecret,room,user, (error,token) => {
 -  `peerRemoved`  有用户加入 
 -  `peerConnected` 有用户离开 
 -  `muteRemoteVideo` 远程用户视频mute回调  
--  `muteRemoteAudio` 远程用户音频mute回调 
+-  `muteRemoteAudio` 远程用户音频mute回调
+-  `audioLevel`   音频音量回调  
+
+>  audioLevel 的值为[-127, 0], -127为静音  0 为最大. dotEngine 会自动过滤audioLevel小于-50
+
 -  `errors`  错误回调 
+
 
 
 ```
@@ -311,6 +317,12 @@ dotEngine.on('muteRemoteVideo', (stream, muted) => {
 dotEngine.on('muteRemoteAudio', (stream, muted) => {
 
     console.log('remote stream video muted ', stream.streamId, muted);
+});
+
+
+dotEngine.on('audioLevel', (stream, audioLevel) => {
+
+    console.log('audioLevel ', stream.streamId,  audioLevel);
 });
 
 
