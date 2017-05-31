@@ -3,7 +3,7 @@
 
 
 
-*2017-05-07 更新*
+*2017-05-31 更新*
 
 
 
@@ -27,6 +27,45 @@
 sdk api 主要包含两部分, `DotEngine` 是dotEngine的主体操作类, `DotEngineListener`是回调类.
 
 
+### VideoProfile
+
+> VideoProfile 代表本地stream的视频质量
+
+
+```
+
+DotEngine_VideoProfile_120P(0, 160, 120, 15, 80),
+DotEngine_VideoProfile_120P_2(1, 120, 160, 15, 80),
+DotEngine_VideoProfile_120P_3(2, 120, 120, 15, 60),
+DotEngine_VideoProfile_180P(10, 320, 180, 15, 160),
+DotEngine_VideoProfile_180P_2(11, 180, 320, 15, 160),
+DotEngine_VideoProfile_180P_3(12, 180, 180, 15, 120),
+DotEngine_VideoProfile_240P(20, 320, 240, 15, 200),
+DotEngine_VideoProfile_240P_2(21, 240, 320, 15, 200),
+DotEngine_VideoProfile_240P_3(22, 240, 240, 15, 160),
+DotEngine_VideoProfile_360P(30, 640, 360, 15, 400),
+DotEngine_VideoProfile_360P_2(31, 360, 640, 15, 400),
+DotEngine_VideoProfile_360P_3(32, 360, 360, 15, 300),
+DotEngine_VideoProfile_480P(40, 640, 480, 15, 500),
+DotEngine_VideoProfile_480P_2(41, 480, 640, 15, 500),
+DotEngine_VideoProfile_480P_3(42, 480, 480, 15, 400),
+DotEngine_VideoProfile_480P_4(43, 640, 480, 30, 750),
+DotEngine_VideoProfile_480P_5(44, 480, 640, 30, 750),
+DotEngine_VideoProfile_480P_6(45, 480, 480, 30, 680),
+DotEngine_VideoProfile_480P_7(46, 640, 480, 15, 1000),
+DotEngine_VideoProfile_720P(50, 1280, 720, 15, 1000),
+DotEngine_VideoProfile_720P_2(51, 720, 1280, 15, 1000),
+DotEngine_VideoProfile_720P_3(52, 1280, 720, 30, 1700),
+DotEngine_VideoProfile_720P_4(53, 720, 1280, 30, 1700),
+
+```
+
+
+
+
+
+
+
 
 ### DotEngine
 
@@ -34,7 +73,7 @@ sdk api 主要包含两部分, `DotEngine` 是dotEngine的主体操作类, `DotE
 
 #### 创建DotEngine实例
 
-`    private DotEngine(Context context, DotEngineListener listener) {...}`
+`private DotEngine(Context context, DotEngineListener listener) {...}`
 
 
 > 该方法创建一个DotEngine的实例, listener 为DotEngineListener
@@ -48,22 +87,25 @@ sdk api 主要包含两部分, `DotEngine` 是dotEngine的主体操作类, `DotE
 > 该方法返回之前创建的DotEngine实例
 
 
+### 添加本地stream  
 
-#### 开启本地音视频
+`public void addStream(DotStream dotStream){...}`
 
-`public void startLocalMedia() {...}`
+> 添加本地stream, 此方法需要在加入房间成功之后回调.
 
-> 该方法初始化本地的音视频, 可以用来在加入房间之前进行视频的预览, 此方法会产生 `onAddLocalView` 回调.
-> 如果不调用此方法, 则该用户为订阅模式,只接收远程的视频.
+> DotEngine 支持添加多个stream, 比如进行屏幕共享的时候,也共享摄像头
+
+> 如果成功会产生 didAddLocalStream 回调
 
 
 
-### 关闭本地音视频
+### 移出本地stream
 
-`    public void stopLocalMedia() {}`
+`public void removeStream(DotStream dotStream){...}`
 
-> 该方法结束本地的音视频, 此方法会产生 `onRemoveLocalView`回调
-> 如果在加入房间之后调用该方法, 则会转为订阅模式.
+> 移出本地stream
+
+> 如果成功会产生 didRemoveLocalStream 回调
 
 
 
@@ -86,91 +128,6 @@ sdk api 主要包含两部分, `DotEngine` 是dotEngine的主体操作类, `DotE
 
 
 
-### 设置本地视频发送质量
-
-`    public void setupVideoProfile(DotEngineVideoProfileType dotEngineVideoProfileType) {...}`
-
-> dotEngine设置了多种视频传输质量来适配各种使用场景. 此方法可以设置本地视频的传输质量.
-
-> 此方法需要在开启本地音视频之前调用. DotEngineVideoProfile 默认为DotEngine_VideoProfile_240P.
-
-- **DotEngineVideoProfile的种类为:**
-
-```
-    DotEngine_VideoProfile_120P(0, 160, 120, 15, 80),
-    DotEngine_VideoProfile_120P_2(1, 120, 160, 15, 80),
-    DotEngine_VideoProfile_120P_3(2, 120, 120, 15, 60),
-    DotEngine_VideoProfile_180P(10, 320, 180, 15, 160),
-    DotEngine_VideoProfile_180P_2(11, 180, 320, 15, 160),
-    DotEngine_VideoProfile_180P_3(12, 180, 180, 15, 120),
-    DotEngine_VideoProfile_240P(20, 320, 240, 15, 200),
-    DotEngine_VideoProfile_240P_2(21, 240, 320, 15, 200),
-    DotEngine_VideoProfile_240P_3(22, 240, 240, 15, 160),
-    DotEngine_VideoProfile_360P(30, 640, 360, 15, 400),
-    DotEngine_VideoProfile_360P_2(31, 360, 640, 15, 400),
-    DotEngine_VideoProfile_360P_3(32, 360, 360, 15, 300),
-    DotEngine_VideoProfile_480P(40, 640, 480, 15, 500),
-    DotEngine_VideoProfile_480P_2(41, 480, 640, 15, 500),
-    DotEngine_VideoProfile_480P_3(42, 480, 480, 15, 400),
-    DotEngine_VideoProfile_480P_4(43, 640, 480, 30, 750),
-    DotEngine_VideoProfile_480P_5(44, 480, 640, 30, 750),
-    DotEngine_VideoProfile_480P_6(45, 480, 480, 30, 680),
-    DotEngine_VideoProfile_480P_7(46, 640, 480, 15, 1000),
-    DotEngine_VideoProfile_720P(50, 1280, 720, 15, 1000),
-    DotEngine_VideoProfile_720P_2(51, 720, 1280, 15, 1000),
-    DotEngine_VideoProfile_720P_3(52, 1280, 720, 30, 1700),
-    DotEngine_VideoProfile_720P_4(53, 720, 1280, 30, 1700),
-```
-
-
-
-### 设置音视频采集模式
-
-`    public void setCaptureMode(final DotEngineCaptureMode captureMode) {...}`
-
-> 此方法为高级api,  设置音视频的采集模式. 使用场景为自定义音视频输入.
-
-- **DotEngineCaptureMode 有四种模式:**
-
-```
-public enum DotEngineCaptureMode {
-       DotEngine_Capture_Default,
-       DotEngine_Capture_Custom_Video,
-       DotEngine_Capture_Custom_Video_Audio,
-       DotEngine_Capture_Screen,
-   }
-```
-
-- **DotEngine_Capture_Default:**  为默认模式, 使用dotEngine内置的音视频采集api.
-
-- **DotEngine_Capture_Custom_Video:**  为自定义视频模式, 使用场景为用户自行采集视频, 需要对采集的视频进行更多的处理, 比如添加滤镜, 增加美颜,视觉分析,然后再把处理过的视频数据送给dotEngine.
-
-- **DotEngine_Capture_Custom_Video_Audio:** 为自定义音频和视频,  此模式暂时未开放.
-
-- **DotEngine_Capture_Screen:** 为自定义屏幕共享  此模式暂时未开放.
-
-### 切换前后摄像头
-
-`public void switchCamera() {...}`
-
-> 切换前后摄像头, 默认是优先选择前置摄像头.
-
-
-
-### 本地音频静音模式切换
-
-`public void muteLocalAudio(final boolean muted) {...}`
-
-> `muted` 如果为true, 会停止发送本地音频, `muted` 如果为false, 会恢复发送本地音频
-
-
-### 本地视频切换
-
-`public void muteLocalVideo(final boolean muted) {...}`
-
-> `muted` 如果为true, 会停止发送本地视频, `muted` 如果为false, 会恢复发送本地视频
-
-
 
 ### 开启/关闭扬声器
 
@@ -179,16 +136,10 @@ public enum DotEngineCaptureMode {
 > speekerphone 模式切换
 
 
-### 开启音量回调
-
-`public void enableAudioVolumeIndicate(Boolean enable){...}`
-
-> 本地音量回调开关
-
 
 ### 获取测试token
 
-`    static public void generateTestToken(String appKey, String appSecret, String room, String user, TokenCallback tokenCallback) {...}`
+`public static void generateTestToken(String appKey, String appSecret, String room, String user, TokenCallback tokenCallback) {...}`
 
 ```
 public GenerateTestToken(final String appKey, final String appSecret, final String room, final String user, final TokenCallback tokenCallback) {
@@ -244,22 +195,10 @@ public GenerateTestToken(final String appKey, final String appSecret, final Stri
 
 > 获得测试token, 方面用户在测试的时候快速集成. 不建议在生产环境中使用, 生产环境中请使用后端sdk来获取token.
 
-
-
-
-
-
-### 发送本地视频
-
-`public void setupVideoProfile(DotEngineVideoProfileTypedotEngineVideoProfileType) {...}
-`
-
-> 当DotEngineCaptureMode 为`DotEngine_Capture_Custom_Video`, `DotEngine_Capture_Custom_Video_Audio`时,需要输入外部的视频源.
-
-
-
-
 <br/>
+
+
+
 
 
 ## DotEngineListener
@@ -285,7 +224,7 @@ DotEngineListener 为一个listener.  处理DotEngine的回调.
 
 ### 用户状态发生变化
 
-`//无`
+`public void onStateChange(DotEngineStatus status){...}`
 
 - **DotEngineStatus:**
 
@@ -305,92 +244,189 @@ public enum DotEngineStatus {
 
 ### 本地视频视图加入回调
 
-`public void onAddLocalView(SurfaceView view) {...}`
+`public void onAddLocalStream(DotStream stream){...}`
 
-> 用户在调用startLocalMedia后, 会回调此方法.
+> 在addStream之后, 会回调此方法.
 
-> 如果view没有被添加到父视图中, 该视图中的视频不会被渲染.
+> 如果stream中包含视频, dotEngine 会自动创建DotView, 可以通过stream.getDotView() 获得已经创建好的view
 
 
+### 本地stream移出回调
 
-### 本地视频视图移出回调
+`public void onRemoveLocalStream(DotStream stream) {...}`
 
-`        public void onRemoveLocalView(SurfaceView view) {...}`
-
-> 用户在调用stopLocalMedia后, 会回调此方法.  dotEngine 不会做view的移出操作, 需要用户自己完成.
-
+> 用户在调用removeStream后, 会回调此方法.  dotEngine 不会做view的移出操作, 需要用户自己完成.
 
 
 
-### 远程视频视图加入回调
+### 远程stream加入回调
 
-`public void onAddRemoteView(String userId, SurfaceView view) {`
+`public void onAddRemoteStream(DotStream stream) {...}`
 
-> 当远程用户的视频准备好的时候会调用此方法.
-
-> 如果view没有被添加父视图中,该视图中的视频不会被渲染.
-
+> 当远程用户的stream创建好的时候会调用此方法.
 
 
 ### 远程视频视图移出回调
 
-`public void onRemoveRemoteView(String userId, SurfaceView view) {...}`
+`public void onRemoveRemoteStream(DotStream stream) {...}`
 
-> 当远程用户的视频移出的时候会调用此方法.dotEngine 不会做view的移出操作, 需要用户自己完成.
-
-
-
-
-### 本地用户静音/关闭静音回调
-
-`public void onMutedLocalAudio(boolean muted) {...}`
-
-> 当用户开启静音或者关闭静音时会产生此回调.  
-
-
-
-### 本地用户关闭视频/打开视频回调
-
-`public void onMutedLocalVideo (boolean muted) {...}`
-
-> 当用户发送视频或者停止发送本地视频时会产生此回调.
-
-
-### 远程用户静音/关闭静音回调
-
-`public void onMutedRemoteAudio(boolean muted, String userId) {...}`
-
-> 远程用户开启静音/或者关闭静音时会产生此回调
-
-
-
-
-### 远程用户关闭/打开视频回调
-
-`public void onMutedRemoteVideo(boolean muted, String userId) {...}`
-
-> 远程用户开启视频/或者关闭视频时会产生此回调
-
-
-
-
-### 用户音量回调
-
-`public void onGotAudioVolume(String userId, int volume){...};`
-
-!> 需要在加入房间之后才有回调,  200ms回调一次
-
-
-### 用户bitrate回调
-
-`public void onGotBitrateStat(String userId, DotBitrateStat stat){...}
-`
-
-!> 需要在加入房间之后才有回调,  1000ms回调一次
+> 当远程用户的stream的时候会调用此方法.dotEngine 不会做view的移出操作, 需要用户自己完成.
 
 
 ### 错误回调
 
-`public void onOccurError(DotEngineErrorType errorType) {...}`
+`public void onOccurError(DotEngineErrorType errorCode) {...}`
 
 > 当dotEngine发生错误会产生此回调
+
+
+
+
+### DotStream
+
+#### 初始化本地stream
+
+`DotStream.builder().setAudio(boolean).setVideo(boolean).build();`
+
+> 创建本地DotStream, audio和video最少需要有一个,否则localStream会建立不成功
+
+
+#### 设置DotStream VideoProfile
+
+`public StreamBuilder setVideoProfile(DotEngineVideoProfileType profile){...}`
+
+> dotEngine设置了多种视频传输质量来适配各种使用场景. 此方法可以设置本地视频的传输质量.
+
+>设置本地视频发送质量, 此方法需要在addStream 前调用. DotEngineVideoProfile 默认为DotEngine_VideoProfile_240P.
+
+
+#### 切换前后摄像头
+
+`public void switchCamera() {...}`
+
+> 切换前后摄像头, 默认是优先选择前置摄像头.
+
+
+
+#### 静音/结束静音   接受/停止接受远程音频
+
+`public void muteAudio(boolean muted) {...}`
+
+> 此方法分为本地和远程. 如果是本地的stream, 则为静音/结束静音. 如果是远程的则为接受/停止接受远程音频
+
+
+#### 显示/不显示本地视频  接受/停止接受远程视频
+
+`public void muteVideo(boolean muted) {...}`
+
+> 此方法分为本地和远程. 如果是本地的stream, 则为显示/不显示本地视频. 如果是远程的则为接受/停止接受远程视频.
+
+
+
+
+
+### DotStream 属性列表
+
+
+
+- `Class DotStreamParams: boolean local;`  是否是本地stream
+
+- `Class DotStreamParams: boolean audio;`  是否包含音频
+
+- `Class DotStreamParams: boolean video;`  是否包含视频
+
+- `private String streamId;` streamId, 全局唯一
+
+- `private String peerId;`  peerId
+
+- `private DotView mDotView;`   stream 对应的view
+
+- `protected DotStreamListener mListener;`  
+
+> DotStream 对应的listener,  可以通过  [stream setDelegate:xxxx] 来进行设置
+
+- `public void setStreamListener(DotStreamListener listener){...}`
+
+> 设置videoCapturer, 自定义视频输入的时候用到, 如果设置此属性视频流将取至videoCapturer
+
+
+
+### DotStreamListener
+
+> DotStreamListener 为DotStream的回调protocol
+
+```
+public interface DotStreamListener {
+
+    void onCameraError(DotStream stream, String error);
+
+    void onVideoMuted(DotStream stream, boolean muted);
+
+    void onAudioMuted(DotStream stream, boolean muted);
+
+    void onAudioLevel(DotStream stream, int audioLevel);
+
+}
+```
+
+
+#### 远程视频 开启/关闭回调
+
+`void onVideoMuted(DotStream stream, boolean muted);`
+
+> 远程视频开启/关闭产生的回调
+
+
+#### 远程音频 开启/关闭回调
+
+`void onAudioMuted(DotStream stream, boolean muted);`
+
+> 远程音频 开启/关闭回调
+
+
+#### 音量回调
+
+`void onAudioLevel(DotStream stream, int audioLevel);`
+
+>  audioLevel 的大小为 [-127,0], -127为静音, 0为最大. dotEngine 会自动过滤audioLevel < -50的,
+
+>  此回调 500ms 回调一次
+
+
+
+### DotView
+
+
+> DotView 为DotEngine 内部创建, 用户并不需要创建DotView实例
+
+#### DotView 属性列表
+
+- `private int frameHeight; private int frameWidth;` videoSize 为接收到视频的大小
+
+- `private static final ScalingType DEFAULT_SCALING_TYPE
+            = ScalingType.SCALE_ASPECT_FILL;`  设置scaleMode
+
+- `private boolean mirror;`   是否镜像该view
+
+
+
+### DotVideoViewScaleMode
+
+```
+public static enum ScalingType { SCALE_ASPECT_FIT,
+    SCALE_ASPECT_FILL}
+```
+
+> `SCALE_ASPECT_FIT`  表示根据view的大小完整显示视频内容, 进行等比例缩放或扩大
+
+> `SCALE_ASPECT_FILL` 表示根据view的大小视频完全填充view, 视频会根据view的大小做一定裁剪
+
+
+
+### DotVideoCapturer
+
+
+> 用户可以自定义视频的输入, 比如添加滤镜, 屏幕共享, 发送一个view. DotVideoCapturer 是一个protocol
+
+
+具体可见 [Custom Capturer](dot-engine-custom-capturer.md)
