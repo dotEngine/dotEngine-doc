@@ -213,23 +213,6 @@ typedef NS_ENUM(NSInteger, DotStatus) {
 > 连接状态发生变化   
 
 
-### 本地stream加入成功回调
-
-`-(void)dotEngine:(DotEngine* _Nonnull) engine didAddLocalStream:(DotStream* _Nonnull)stream;`
-
-> 在addStream之后, 会回调此方法. 
-
-> 如果stream中包含视频, dotEngine 会自动创建DotView, 可以通过stream.view 获得已经创建好的view
-
-
-
-
-### 本地stream移出回调
-
-`-(void)dotEngine:(DotEngine* _Nonnull) engine didRemoveLocalStream:(DotStream* _Nonnull)stream;`
-
-> 用户在调用removeStream后, 会回调此方法.  dotEngine 不会做view的移出操作, 需要用户自己完成.
-
 
 
 
@@ -279,6 +262,21 @@ typedef NS_ENUM(NSInteger, DotStatus) {
 >设置本地视频发送质量, 此方法需要在addStream 前调用. DotEngineVideoProfile 默认为DotEngine_VideoProfile_240P.
 
 
+
+#### 开启本地视频预览 
+
+`-(void)setupLocalMedia;`
+
+> 在加入房间之前开启本地媒体, 用来预览视频 
+
+
+
+#### 关闭本地视频(不可再开启)
+
+`-(void)shutdownLocalMedia;`
+
+
+> 关闭本地媒体, 关闭之后不可再开启.
 
 
 #### 切换前后摄像头 
