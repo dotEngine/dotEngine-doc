@@ -2,21 +2,22 @@
 
 
 
-*2017-05-07 更新*
+*2017-06-30 12:48:37*
 
 
 
 ## SDK使用
 
 
-!> dotEngine iOS SDK 提供静态库,只需要将静态库和头文件导入项目就可以使用.
+> dotEngine iOS SDK 提供静态库,只需要将静态库和头文件导入项目就可以使用.
 
-!> dotEngine iOS SDK 支持iOS8和iOS8+
+> dotEngine iOS SDK 支持iOS8和iOS8+
 
-!> dotEngine iOS SDK 暂时不支持bitcode
+> dotEngine iOS SDK 暂时不支持bitcode, 支持bitcode会让库的体积变大
+
+
 
 ### dotEngine iOS SDK 需要如下的库:
-
 
 - VideoToolbox.framework
 - SystemConfiguration.framework
@@ -32,6 +33,8 @@
 - UIKit.framework
 - libcucore.tbd
 - libc++.tbd
+
+> 如果
 
 
 ## SDK API  
@@ -225,7 +228,7 @@ typedef NS_ENUM(NSInteger, DotStatus) {
 
 
 
-### 远程视频视图移出回调
+### 远程stream移出回调
 
 `-(void)dotEngine:(DotEngine* _Nonnull) engine didRemoveRemoteStream:(DotStream* _Nonnull) stream;`
 
@@ -267,16 +270,16 @@ typedef NS_ENUM(NSInteger, DotStatus) {
 
 `-(void)setupLocalMedia;`
 
-> 在加入房间之前开启本地媒体, 用来预览视频 
+> 开启本地媒体, 用来预览视频. 如果没有开启视频, dotEngine会在addStream时候自动开启
 
 
 
-#### 关闭本地视频(不可再开启)
+#### 关闭本地视频
 
 `-(void)shutdownLocalMedia;`
 
 
-> 关闭本地媒体, 关闭之后不可再开启.
+> 关闭本地媒体, 结束会话的时候关闭媒体.
 
 
 #### 切换前后摄像头 
@@ -376,7 +379,6 @@ protocol DotStreamDelegate <NSObject>
 
 - `@property (nonatomic, readonly) CGSize videoSize;` videoSize 为接收到视频的大小
 
-- `@property (nonatomic, readonly) BOOL hasVideoData;` 是否已经接收到视频的第一帧
 
 - `@property (nonatomic, weak)     id<DotViewDelegate>  dotViewDelegate;` 
 
@@ -399,6 +401,8 @@ typedef NS_ENUM(NSUInteger, DotVideoViewScaleMode)
     DotVideoViewScaleModeFill = 1,
 };
 ```
+
+> DotVideoViewScaleMode 默认为 `DotVideoViewScaleModeFill`
 
 > `DotVideoViewScaleModeFit`  表示根据view的大小完整显示视频内容, 进行等比例缩放或扩大
 

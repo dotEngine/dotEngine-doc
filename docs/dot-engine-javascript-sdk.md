@@ -1,6 +1,6 @@
 # dotEngine javascript sdk
 
-*2017-05-31 更新*
+*2017-06-30 14:54:19*
 
 
 ## SDK使用
