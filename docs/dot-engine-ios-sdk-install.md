@@ -23,3 +23,23 @@ iOS9需要在 info.plist 申请音视频的权限
 ### 关闭bitcode
 
 在 `Build Settings` 中的 `Enable Bitcode` 設定為 NO 
+
+
+
+### dotEngine iOS SDK 需要如下的库:
+
+- VideoToolbox.framework
+- SystemConfiguration.framework
+- OpenGLES.framework
+- GLKit.framework
+- CoreVideo.framework
+- CoreTelephony.framework
+- CoreMedia.framework
+- CoreGraphics.framework
+- AVFoundation.framework
+- AudioToolbox.framework
+- Foundation.framework
+- UIKit.framework
+- libcucore.tbd
+- libc++.tbd
+

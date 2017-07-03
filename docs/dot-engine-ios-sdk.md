@@ -6,39 +6,39 @@
 
 
 
-## SDK使用
-
-
-> dotEngine iOS SDK 提供静态库,只需要将静态库和头文件导入项目就可以使用.
-
-> dotEngine iOS SDK 支持iOS8和iOS8+
-
-> dotEngine iOS SDK 暂时不支持bitcode, 支持bitcode会让库的体积变大
 
 
 
-### dotEngine iOS SDK 需要如下的库:
 
-- VideoToolbox.framework
-- SystemConfiguration.framework
-- OpenGLES.framework
-- GLKit.framework
-- CoreVideo.framework
-- CoreTelephony.framework
-- CoreMedia.framework
-- CoreGraphics.framework
-- AVFoundation.framework
-- AudioToolbox.framework
-- Foundation.framework
-- UIKit.framework
-- libcucore.tbd
-- libc++.tbd
 
-> 如果
+## 安装方法 
+
+### CocoaPods
+
+1, 在Podfile 内加入 `pod 'libdotEngine', :git => 'https://github.com/dotEngine/dotEngine-ios-sdk.git'`
+2, 使用 `pod install` 安装
+
+
+### plist 设定
+
+iOS9需要在 info.plist 申请音视频的权限
+
+```
+<key>NSMicrophoneUsageDescription</key>
+<string>dotEngine need to access your microphone</string>
+<key>NSCameraUsageDescription</key>
+<string>dotEngine need to access your camera</string>
+
+```
+
+
+### 关闭bitcode
+
+在 `Build Settings` 中的 `Enable Bitcode` 設定為 NO 
+
 
 
 ## SDK API  
-
 
 
 ### VideoProfile 
@@ -216,6 +216,20 @@ typedef NS_ENUM(NSInteger, DotStatus) {
 > 连接状态发生变化   
 
 
+
+### 本地stream加入回调 
+
+`-(void)dotEngine:(DotEngine* _Nonnull) engine didAddLocalStream:(DotStream* _Nonnull)stream;`
+
+> 本地stream加入回调, 可以在回调中添加预览.
+
+
+### 本地stream移出回调
+
+`-(void)dotEngine:(DotEngine* _Nonnull) engine didRemoveLocalStream:(DotStream* _Nonnull)stream;`
+
+
+> 本地stream移出回调, 可以在回调中移出预览.
 
 
 
