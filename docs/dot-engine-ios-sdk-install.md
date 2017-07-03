@@ -3,7 +3,7 @@
 
 ### CocoaPods
 
-1, 在Podfile 内加入 `pod xxxxxxxx`
+1, 在Podfile 内加入 `pod 'libdotEngine', :git => 'https://github.com/dotEngine/dotEngine-ios-sdk.git'`
 2, 使用 `pod install` 安装
 
 
