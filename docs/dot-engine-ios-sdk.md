@@ -418,7 +418,7 @@ typedef NS_ENUM(NSUInteger, DotVideoViewScaleMode)
 
 > DotVideoViewScaleMode 默认为 `DotVideoViewScaleModeFill`
 
-> `DotVideoViewScaleModeFit`  表示根据view的大小完整显示视频内容, 进行等比例缩放或扩大
+> `DotVideoViewScaleModeFit`  表示根据view的大小完整显示视频内容, 进行等比例缩放或扩大, DotView会出现留白
 
 > `DotVideoViewScaleModeFill` 表示根据view的大小视频完全填充view, 视频会根据view的大小做一定裁剪
 

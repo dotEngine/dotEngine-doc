@@ -13,5 +13,6 @@
     - [Rest API](dot-engine-rest-api.md)
 
 - FAQ
-    - todo 
+    - [FaceBeauty](dot-engine-face-beauty.md)
+    - [Custom Capturer](dot-engine-video-capturer.md)
     

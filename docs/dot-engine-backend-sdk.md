@@ -29,7 +29,6 @@ https://github.com/dotEngine/dotEngine-java-sdk
 
 ## php sdk 
 
-`need to be done`
 https://github.com/dotEngine/dotEngine-php-sdk
 
 
