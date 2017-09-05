@@ -1,9 +1,4 @@
-![logo](_media/logo.svg)
+![](_media/bg2.png)
 
-# dotEngine 
-
-> 实时音视频通信服务
-
-
-[GitHub](https://github.com/dotEngine)
-[Get Started](#dotEngine)
+<!-- background color -->
+![color](#f8f8f8)
