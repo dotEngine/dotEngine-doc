@@ -26,7 +26,7 @@ iOS9需要在 info.plist 申请音视频的权限
 
 
 
-### dotEngine iOS SDK 需要如下的库:
+### dotEngine iOS SDK 需要依赖以下的库:
 
 - VideoToolbox.framework
 - SystemConfiguration.framework

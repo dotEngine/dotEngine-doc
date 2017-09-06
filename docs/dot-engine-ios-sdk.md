@@ -81,8 +81,8 @@ typedef NS_ENUM(NSInteger)
     
     DotEngine_VideoProfile_720P = 50,		// 1280x720  15   1000
     DotEngine_VideoProfile_720P_2 = 51,		// 720x1280  15   1000
-    DotEngine_VideoProfile_720P_3 = 52,		// 1280x720  30   1700
-    DotEngine_VideoProfile_720P_4 = 53,		// 720x1280  30   1700
+    DotEngine_VideoProfile_720P_3 = 52,		// 1280x720  30   1500
+    DotEngine_VideoProfile_720P_4 = 53,		// 720x1280  30   1500
     
 } DotEngineVideoProfile;
 
@@ -315,8 +315,14 @@ typedef NS_ENUM(NSInteger, DotStatus) {
 > 此方法分为本地和远程. 如果是本地的stream, 则为显示/不显示本地视频. 如果是远程的则为接受/停止接受远程视频.
 
 
-### DotStream 属性列表 
+#### 截图 
 
+`-(void)snapshot:(void (^)(UIImage * image))snapshotBlock`
+
+> 截取一帧, 此方法需要在此视图开始渲染之后调用 
+
+
+### DotStream 属性列表 
 
 
 - `@property (nonatomic,readonly) BOOL local;`  是否是本地stream
@@ -333,9 +339,15 @@ typedef NS_ENUM(NSInteger, DotStatus) {
 
 - `@property (nonatomic,weak) id<DotStreamDelegate> delegate;`  
 
+- `@property (nonatomic,assign) float beautyLevel;`   取值范围在0.0-1.0  默认值为0.5
+
+- `@property (nonatomic,assign) float brightLevel;`   取值返回在0.0-1.0  默认值为0.5
+
+- `@property (nonatomic,assign) BOOL  useFaceBeauty;` 是否开启美颜 
+
 > DotStream 对应的delegate,  可以通过  [stream setDelegate:xxxx] 来进行设置
 
-- `@property (nonatomic,retain) id<DotVideoCapturer> _Nullable videoCapturer;`
+- `@property (nonatomic,assign) DotVideoCapturer* _Nullable videoCaptuer;`
 
 > 设置videoCapturer, 自定义视频输入的时候用到, 如果设置此属性视频流将取至videoCapturer
 
@@ -393,7 +405,6 @@ protocol DotStreamDelegate <NSObject>
 
 - `@property (nonatomic, readonly) CGSize videoSize;` videoSize 为接收到视频的大小
 
-
 - `@property (nonatomic, weak)     id<DotViewDelegate>  dotViewDelegate;` 
 
 > DotView 对应的delegate, 可以通过 [view setDotViewDelegate:XXXXX] 来进行设置
@@ -401,7 +412,6 @@ protocol DotStreamDelegate <NSObject>
 - `@property (nonatomic, assign)   DotVideoViewScaleMode scaleMode;`  设置scaleMode
 
 - `@property (nonatomic, assign)   BOOL mirror;`   是否镜像该view
-
 
 
 
@@ -451,10 +461,10 @@ typedef NS_ENUM(NSUInteger, DotVideoViewScaleMode)
 ### DotVideoCapturer
 
 
-> 用户可以自定义视频的输入, 比如添加滤镜, 屏幕共享, 发送一个view. DotVideoCapturer 是一个protocol
+> 用户可以自定义视频的输入, 比如添加滤镜, 屏幕共享, 发送一个view. 
 
 
-具体可见 [Custom Capturer](dot-engine-custom-capturer.md)
+具体可见 [Custom Capturer](dot-engine-video-capturer.md)
 
 
 
